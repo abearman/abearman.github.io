@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The case for trying war criminals
+title: The case for Nuremberg trials in America 
 ---
 
 Here's a thought experiment. Suppose that a person, with knowledge of an imminent terrorist attack that will kill many people, is being held by the government. He refuses to disclose any information. Torture is guaranteed to produce the information the authorities need. Is it ethical to torture him?
@@ -33,7 +33,7 @@ Obama's statement is a nice thought, but it has legal ramnifications he may not 
 
 In 1988, Reagan (Reagan!) signed the UN Convention on Torture, which established a regime for international cooperation in the criminal prosecution of torturers. It defines torture as:
 
-> any act by which severe pain or suffering, whether physical or mental, is intentionally inflicted on a person for such purposes as obtaining from him or a third person information or a confession, punishing him for an act he or a third person has committed or is suspected of having committed, or intimidating or coercing him or a third person, or for any reason based on discrimination of any kind, when such pain or suffering is inflicted by or at the instigation of or with the consent or acquiescence of a public official or other person acting in an official capacity.
+> **any act by which severe pain or suffering, whether physical or mental**, is **intentionally inflicted** on a person for such purposes as obtaining from him or a third person information or a confession, punishing him for an act he or a third person has committed or is suspected of having committed, or intimidating or coercing him or a third person, or for any reason based on discrimination of any kind, when such pain or suffering is inflicted by or at the instigation of or with the consent or acquiescence of a public official or other person acting in an official capacity.
 
 The Convention also clearly states that torture is *never* justified, neither by threat of war or by orders from a higher-up:
 
@@ -41,8 +41,8 @@ The Convention also clearly states that torture is *never* justified, neither by
 
 The Convention requires that each state take legislative, administrative, or judicial measures to prevent acts of torture in its jurisdiction. 
 
+And it's clear who is responsible for the shameful torture program carried out for years by the United States. Dick Cheney has gone on Meet the Press to defend "enhanced interrogation techniques" and stated that he would "do it again in a minute": 
 
-The Bush Administration made a hard, but justified decision in a difficult time to protect our national security. Right?
+> I have no problem as long as we achieve our objective. And our objective is to get the guys who did 9/11 and it is to avoid another attack against the United States. I was prepared and we did. We got authorizing from the president and authorization from the Justice Department to go forward with the program. It worked. It worked now for 13 years. We've avoided another mass casualty attack against the United States. And we did capture Bin Laden. We did capture an awful lot of the senior guys at Al Qaeda who were responsible for that attack on 9/11. I'd do it again in a minute.
 
-Actually, no. 
-
+So why are we still debating this?
