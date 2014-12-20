@@ -23,10 +23,13 @@ If you don't get a chance to read the report for yourself, here are the key poin
 
 So the CIA torture program was brutal, mismanaged, not effective, and kept secret from the American public. 
 
-But at least now it's out in the open, even if 56% of Americans believe that torture works. Why dig up the past? When President Obama took office in 2009, he released a set of torture memos in response to a lawsuit, assuring those involved that they would not be subject to prosecution. Obama urged the country to not look back. He said:
+But at least now it's out in the open, even if 56% of Americans believe that torture works. Why dig up the past? When President Obama took office in 2009, he released a set of torture memos in response to a lawsuit, and absolved those involved of the legal implications:
 
-> This is a time for reflection, not retribution. I respect the strong views and emotions that these issues evoke. We have been through a dark and painful chapter in our history. But at a time of great challenges and disturbing disunity, nothing will be gained by spending our time and energy laying blame for the past. Our national greatness is embedded in America’s ability to right its course in concert with our core values, and to move forward with confidence. That is why we must resist the forces that divide us, and instead come together on behalf of our common future.
+> In releasing these memos, it is our intention to assure those who carried out their duties relying in good faith upon legal advice from the Department of Justice that they will not be subject to prosecution.
 
+Obama also urged Americans to "move forward with confidence" and not to "spend our time and energy laying blame for the past."
+
+Obama's statement is a nice thought, but it has legal ramnifications he may not have considered at the time, and it is an ugly nod to the Nuremberg trials in its defense of those involved in the torture program ("I was only following orders").
 
 
 The Bush Administration made a hard, but justified decision in a difficult time to protect our national security. Right?
