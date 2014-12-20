@@ -7,10 +7,10 @@ In early December, the Senate Select Committee on Intelligence released a 6,700-
 
 If you don't get a chance to read the report for yourself, here are the key points I gathered:
 
-1. The CIA's use of "enhanced interrogation techniques" was not an effective means of acquiring intelligence or gaining cooperation from detainees.
+1. **The CIA's use of "enhanced interrogation techniques" was not an effective means of acquiring intelligence or gaining cooperation from detainees.**
 Multiple detainees fabricated information about terrorist threats, resulting in faulty information. However, the CIA claimed that the interrogation techniques "saved lives" and made use of "otherwise unavailable" intelligence. In its reports, the CIA omitted the relevant intelligence obtained from sources other than detainees subjected to CIA's techniques.
 
-2. The interrogations and confinement conditions of CIA detainees were brutal and far worse than the CIA let on. 
+2. **The interrogations and confinement conditions of CIA detainees were brutal and far worse than the CIA let on.**
 These techniques included: sleep deprivation, slamming detainees against a wall, nudity, waterboarding to induce near drownings, shackling detainees in stress positions for extended period of time, rectal rehydration, ice water baths, threats to detainees' family members, threats of indefinite incarceration, detainees kept in complete darkness, detainees kept in isolated cells with loud noise or music and only a bucket for human waste, lack of sufficient heating.
 
 3. 
