@@ -29,7 +29,17 @@ But at least now it's out in the open, even if 56% of Americans believe that tor
 
 Obama also urged Americans to "move forward with confidence" and not to "spend our time and energy laying blame for the past."
 
-Obama's statement is a nice thought, but it has legal ramnifications he may not have considered at the time, and it is an ugly nod to the Nuremberg trials in its defense of those involved in the torture program ("I was only following orders").
+Obama's statement is a nice thought, but it has legal ramnifications he may not have considered at the time, and it is an ugly nod to the Nuremberg trials in its defense of those involved in the torture program ("I was only following orders"). American and international law doesn't give Obama the choice to "move forward" when it comes to torture carried out by the United States. The U.S. has a legal duty to prosecute torture. 
+
+In 1988, Reagan (Reagan!) signed the UN Convention on Torture, which established a regime for international cooperation in the criminal prosecution of torturers. It defines torture as:
+
+> any act by which severe pain or suffering, whether physical or mental, is intentionally inflicted on a person for such purposes as obtaining from him or a third person information or a confession, punishing him for an act he or a third person has committed or is suspected of having committed, or intimidating or coercing him or a third person, or for any reason based on discrimination of any kind, when such pain or suffering is inflicted by or at the instigation of or with the consent or acquiescence of a public official or other person acting in an official capacity.
+
+The Convention also clearly states that torture is *never* justified, neither by threat of war or by orders from a higher-up:
+
+> No exceptional circumstances whatsoever, whether a state of war or a threat or war, internal political instability or any other public emergency, may be invoked as a justification of torture. An order from a superior officer or a public authority may not be invoked as a justification of torture.
+
+The Convention requires that each state take legislative, administrative, or judicial measures to prevent acts of torture in its jurisdiction. 
 
 
 The Bush Administration made a hard, but justified decision in a difficult time to protect our national security. Right?
