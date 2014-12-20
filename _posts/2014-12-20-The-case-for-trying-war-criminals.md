@@ -3,8 +3,6 @@ layout: post
 title: The case for Nuremberg trials in America 
 ---
 
-![Cheney on Meet the Press last week](../images/cheney.jpg)
-
 Here's a thought experiment. Suppose that a person, with knowledge of an imminent terrorist attack that will kill many people, is being held by the government. He refuses to disclose any information. Torture is guaranteed to produce the information the authorities need. Is it ethical to torture him?
 
 This problem is called the "ticking time bomb scenario," and it trips up many moral people. Should one value the life and well-being of one intransigent detainee over the lives of hundreds of innocents? In this case, is torture not only permissable but also morally necessary?
