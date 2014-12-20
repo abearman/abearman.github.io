@@ -45,7 +45,7 @@ The Convention also clearly states that torture is *never* justified, neither by
 
 > No exceptional circumstances whatsoever, whether a state of war or a threat or war, internal political instability or any other public emergency, may be invoked as a justification of torture. An order from a superior officer or a public authority may not be invoked as a justification of torture.
 
-The Convention requires that each state take legislative, administrative, or judicial measures to prevent acts of torture in its jurisdiction. 
+The Convention requires that each participating state take legislative, administrative, or judicial measures to prevent acts of torture in its jurisdiction. 
 
 And it's clear who is responsible for the shameful torture program carried out for years by the United States. Dick Cheney has gone on Meet the Press to defend "enhanced interrogation techniques" and stated that he would "do it again in a minute": 
 
