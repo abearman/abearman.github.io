@@ -1,8 +1,8 @@
 ---
 layout: post
-title: First Post
+title: Male Protagonists
 ---
 
 > I’d always understood I was a she, and I never wanted to be otherwise. And yet somehow I was convinced that the disparaging things my male heroes said about women didn’t apply to me, not because they were untrue about females generally, but because I must not be the sort of female they were talking about. Being a strange kid helped—I had the overdeveloped intellect and underdeveloped social skills that precocious children of all genders seem to share. Since I was comfortable with being different, the masculine aspects of my personality were one more oddity among many. These oddities allowed me to nod comfortably along with sections of a novel where the author paused a moment to explain that women were like such-and-so, and then got back to the important parts, which had men in them ...
 
-> It took high school and part of college before I began to grow out of this mentality, but eventually I appreciated that the basic difference between me and other women wasn’t that they were dumber and more frivolous than I was ... It also dawned on me, albeit slowly, that the rest of the world largely saw me as a woman like any other. I mourned this, wishing for the first time that I’d been born a boy so my combative conversational style and my impulse to dominate and destroy all comers could be met with approval, rather than dismay, from peers, teachers, and family members.
+It took high school and part of college before I began to grow out of this mentality, but eventually I appreciated that the basic difference between me and other women wasn’t that they were dumber and more frivolous than I was ... It also dawned on me, albeit slowly, that the rest of the world largely saw me as a woman like any other. I mourned this, wishing for the first time that I’d been born a boy so my combative conversational style and my impulse to dominate and destroy all comers could be met with approval, rather than dismay, from peers, teachers, and family members.
