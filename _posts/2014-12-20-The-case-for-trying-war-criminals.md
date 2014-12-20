@@ -17,13 +17,17 @@ In early December, the Senate Select Committee on Intelligence released a 6,700-
 
 If you don't get a chance to read the report for yourself, here are the key points I gathered:
 
-1. The CIA's use of "enhanced interrogation techniques" was not an effective means of acquiring intelligence or gaining cooperation from detainees.
+1. The CIA's use of "enhanced interrogation techniques" was not an effective means of acquiring intelligence or gaining cooperation from detainees, but the CIA coordinated the release of classified but inaccurate information to the media to distort public opinion. 
 
 2. The interrogations and confinement conditions of CIA detainees were brutal and far worse than the CIA let on.
 
-3. 
+3. The CIA impeded congressional and White House oversight of the program, and repeatedly misled the Department of Justice, preventing a proper legal analysis of the torture program.
 
-So the CIA torture program was brutal, mismanaged, not effective, and kept secret from the American public. 
+4. The CIA's management and operation of its Detention and Interrogation Program was deeply flawed and mismanaged, especially at its inception in 2002, when it was unprepared to take custody of its first detainee. CIA officers were untrained, unsupervised, and often conducted harsh, physical, unauthorized interrogations that were never part of the CIA's formal "enhanced" interrogation program. The CIA rarely held personnel accountable for serious violations, inappropriate activities, and systemic management failures.
+
+5. The CIA did not accurately account for the number of detainees, and it held individuals who did not meet the legal standard for detention. Of the 119 known detainees, at least 26 were wrongfully held. 
+
+So the CIA torture program was brutal, mismanaged, ineffective, and kept secret from the American public. 
 
 But at least now it's out in the open, even if 56% of Americans believe that torture works. Why dig up the past? When President Obama took office in 2009, he released a set of torture memos in response to a lawsuit, and absolved those involved of the legal implications:
 
