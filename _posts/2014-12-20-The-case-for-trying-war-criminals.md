@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The case for trying war criminalss
+title: The case for trying war criminals
 ---
 
 Here's a thought experiment. Suppose that a person, with knowledge of an imminent terrorist attack that will kill many people, is being held by the government. He refuses to disclose any information. Torture is guaranteed to produce the information the authorities need. Is it ethical to torture him?
