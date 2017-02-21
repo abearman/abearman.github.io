@@ -4,10 +4,23 @@ tagline:      A blog about Silicon Valley, Computer Vision, politics, and femini
 baseurl:      ""
 paginate:     1
 
+avatar: https://avatars0.githubusercontent.com/u/1936669?v=3&u=cc18c5fa19e11e510c3f198621fab744c96f645c&s=400
+
 # About/contact
 author:
   name:      	Amy Bearman 
-  url:        http://yourhomepage.com 
+
+footer-links:
+  dribbble: 
+  email: abearman@cs.stanford.edu
+  facebook: 
+  flickr: 
+  github: abearman 
+  instagram: amy.bearman
+  linkedin: amy-bearman
+  pinterest: 
+  rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
+  twitter: AmyBearman
 
 # Gems
 gems:

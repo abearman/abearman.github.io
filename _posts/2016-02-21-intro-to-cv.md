@@ -1,7 +1,7 @@
 ---
 layout: default
-title:  "Welcome to Jekyll!"
-date:   2016-02-12 17:50:00
+title:  "Intro to CV"
+date:   2016-02-21 13:50:00
 categories: main
 ---
 
