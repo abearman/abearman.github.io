@@ -97,7 +97,7 @@ g[n, m] &= \frac{1}{9} \sum_{k=n-1}^{n+1} \sum_{l=m-1}^{m+1} f[k, l] \\
 
 ### Filter example #2: Image Segmentation
 
-Image segmentation based on the threshold:
+Image segmentation based on a pixel intensity threshold:
 
 {% raw %}
 $$g[n, m] 
@@ -106,6 +106,11 @@ $$g[n, m]
 0 & \text{ otherwise }
 \end{cases}$$
 {% endraw %}
+
+Image after segmentation:
+
+<img src="http://vgl-ait.org/cvwiki/lib/exe/fetch.php?media=opencv:tutorial:simple.jpg" style="height:250px"/>/
+
 
 {% highlight ruby %}
 def print_hi(name)
