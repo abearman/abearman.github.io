@@ -7,7 +7,7 @@ categories: main
 
 <head>
 <script type="text/javascript"
-        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 </head>
 
@@ -111,6 +111,7 @@ Image after segmentation:
 
 <img src="http://vgl-ait.org/cvwiki/lib/exe/fetch.php?media=opencv:tutorial:simple.jpg" style="height:250px"/>/
 
+### Convolution
 
 {% highlight ruby %}
 def print_hi(name)
