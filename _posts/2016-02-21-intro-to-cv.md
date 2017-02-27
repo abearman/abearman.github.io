@@ -460,8 +460,7 @@ $$
 \text{distance}(-mx + y -b = 0, (x_0, y_0)) = \frac{\mid -m x_0 + y_0 + b \mid}{\sqrt{m^2 + 1}}
 $$
 
-$$$$
-
+Below are visuals for each of the 4 steps to the RANSAC algorithm:
 
 <div style="display:inline-block;">
   <div style="float:left">
@@ -481,6 +480,40 @@ $$$$
     <img src="{{ site.baseurl }}/assets/images/ransac-4.png" style="height:180px"/>
   </div>
 </div>
+
+### How to choose $$k$$?
+
+The last thing we need to do before running the algorithm is to choose values for the hyperparameters $$k$$, $$n$$, $$t$$, and $$d$$. 
+The latter two $$t$$ and $$d$$, can be determined from experimental evaluation, because they tend to be application-specific.
+$$n$$ is the minimum number of points needed to fit the model ($$n=2$$ for fitting a line). 
+
+The hyperparameter we really need to optimize is $$k$$, the number of samples needed. 
+
+Let $$p$$ be the probability that, *in some iteration*, the RANSAC algorithm selects **only inliers** from the input data set when it chooses the random sample of $$n$$ points. Therefore, $$p$$ is the probability that, at some point, the algorithm will produce a "good" model.
+
+Let $$w$$ be the probability of choosing an inliner each time a single point is selected, that is,
+
+$$ w = \frac{\text{# inliers in data}}{\text{# points in data}} $$
+
+We may not know $$w$$ a priori, but we can estimate its value. Assuming that the $$n$$ random points are chosen independently, $$w^n$$ is the probability that all $$n$$ points are inliners and $$1-w^n$$ is the probability that at least one of the $$n$$ points is an outlier (and therefore, the probability that a "bad" model will be estimated from `possible_inliers` and `definite_inliers`).
+
+Since we choose $$k$$ samples during our $$k$$ iterations, the probability that the algorithm never selects a set of $$n$$ points which all are inliers is:
+
+$$ 1 - p = (1-w^n)^k$$
+
+So, we can choose $$k$$ to be high enough to keep $$1-p$$ below a desired failure rate. 
+
+### Pros and Cons of RANSAC
+
+**Pros**
+* RANSAC is a general method suited for a wide range of applications.
+* It's easy to implement
+* It's easy to calculate its failure rate. 
+
+**Cons**
+* RANSAC can only	handle a moderate	percentage of	outliers ([< 50%](https://en.wikipedia.org/wiki/Random_sample_consensus)) without its runtime blowing up.	
+* Many real problems have a high rate of outliers. 
+
 
 ### Resources:
 * Professor Fei-Fei Li's CS 131 [lecture 1](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture1_introduction_cs131_2016.pdf), [lecture 4](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture4_pixels%20and%20filters_cs131_2016.pdf), and [lecture 5](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture5_edges_cs131_2016.pdf) slides.
