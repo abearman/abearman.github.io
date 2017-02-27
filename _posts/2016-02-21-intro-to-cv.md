@@ -13,11 +13,25 @@ categories: main
 
 # Intro to Computer Vision 
 
+This article covers the basics of 2D computer vision, including image representation, filters, edge detection, feature detectors, and segmentation. 
+Later posts will cover deep learning topics.
+It is heavily based on slides from Professor Fei-Fei Li's class, CS131. Its purpose is mostly to be notes and review for myself, but hopefully it might be useful for other people as well! 
+
+## Table of Contents
+* [Image Representation](#image-representation)
+* [Image Filters](#image-filters)
+* [Convolution](#convolution)
+* [Edge Detection](#edge-detection)
+* [Canny Edge Detector](#canny-edge-detector)
+* [RANSAC](#ransac)
+
+## Image Representation
+
 The **goal** of computer vision is to bridge the gap between pixels and "meaning." When you give a computer an image, all it sees is a 2D (or 3D, if the image is in color) numerical array:
 
 <img src="http://images.slideplayer.com/16/5003478/slides/slide_7.jpg" style="width:500px;"/>
 
-## What kind of information can we extract from an image? 
+### What kind of information can we extract from an image? 
 
 **Metric Information**
 
@@ -40,7 +54,7 @@ The **goal** of computer vision is to bridge the gap between pixels and "meaning
 
 <img src="https://i.ytimg.com/vi/WZmSMkK9VuA/hqdefault.jpg" style="width:500px;"/>
 
-## How do we represent an image? 
+### How do we represent an image? 
 An image contains a discrete number of pixels, each of which have an "intensity" value: 
 * Grayscale: [0, 255]
 * Color: [R, G, B] 
@@ -302,7 +316,7 @@ _
   <div style="float:left;margin-left:20px">
     <img src="http://www-scf.usc.edu/~boqinggo/Canny/nonmaximum_suppress_lena.jpg" style="height:300px"/>
     <p style="width:300px;text-align:center;font-size:14px">After non-max suppression</p>
-  </div><br>
+  </div>
 </div>
 
 ### Step 4: Hysteresis thresholding
@@ -325,7 +339,7 @@ After hysteresis, we end up with only the strong edges in the image:
   <div style="float:left;margin-left:20px">
     <img src="http://www-scf.usc.edu/~boqinggo/Canny/canny_lena.jpg" style="height:300px"/>
     <p style="width:300px;text-align:center;font-size:14px">After hysteresis</p>
-  </div><br>
+  </div>
 </div>
 
 We can do all of these steps in one line in Python:
@@ -334,9 +348,143 @@ We can do all of these steps in one line in Python:
 import cv2
 import numpy as np
 
-img = cv2.imread('img_name.jpg', 0)  # Loads an image in grayscale
+img = cv2.imread('fimg_name.jpg', 0)  # Loads an image in grayscale
 edges = cv2.Canny(img, 100, 200)  # 2nd and 3rd args are minVal and maxVal, respectively
 {% endhighlight %}
+
+## RANSAC 
+
+### Line fitting
+
+Sometimes we want to fit lines in an image, rather than just detect edges. Many objects are characterized by the presence of straight lines:
+
+<div style="display:inline-block;">
+  <div style="float:left">
+    <img src="{{ site.baseurl }}/assets/images/line-fit1.png" style="height:300px"/>
+  </div>
+  <div style="float:left;margin-left:20px">
+    <img src="{{ site.baseurl }}/assets/images/line-fit2.png" style="height:300px"/>
+  </div>
+</div>
+
+Edge detection doesn't solve this completely, because it poses problems of its own:
+* Introduces clutter (which points go with which line, if any?)
+* It misses some parts of a line (discontinuities)
+* There is noise in the measured edge points and orientations (how do we detect the true parameters, e.g., line slope and y-intercept?) 
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:50%">
+    <img src="{{site.basurl}}/assets/images/edge-detection-building.png" style="height:400px"/>
+  </div>
+	<p style="width:85%;text-align:center;font-size:14px">Where are the straight lines in this image?</p>
+</div>
+
+### Voting
+
+It's not feasible to check all combinations of features by fitting a model to each possible subset. **Voting** is a general technique where we let the features "vote" for all models that are compatible with them:
+* Loop through each set of features, and for each feature set, cast votes for model parameters
+* Choose the model parameters that receive the most votes 
+
+Features that arise from noise or clutter will also get to cast votes, but typically their votes should be inconsistent with the majority of "good" features.
+
+### RANSAC (**RAN**dom **SA**mple **C**onsensus)
+
+**RANSAC** is an iterative method to estimate the parameters of a mathematical model from a set of observed data that contains **inliers** and **outliers**. Inliers are data whose distribution can be explained by a set of model parameters, and outliers are data that do not fit the model (e.g., extreme noise, incorrect measurements). Here, we're trying to estimate the parameters for a line in an image.
+
+The RANSAC algorithm (for the task of line fitting) is as follows:
+
+{% highlight python%}
+import sys
+import random 
+from scipy import stats
+
+def ransac(data, k, n, t, d):
+  """
+  RANSAC algorithm
+  
+  Args:
+    data: A set of observed data points (list of (x, y) tuples).
+    k: The maximum number of iterations allowed in the algorithm. 
+    n: The minimum number of data values required to fit the model.
+    t: A threshold value for determining when a data point fits a model. 
+    d: The number of inliers required to assert that the model fits the data well.
+
+  Returns: 
+    This is what is returned.
+  """
+  best_slope, best_intercept = 0
+  best_error = sys.maxint
+
+  for i in range(k):  
+    # Step 1: Randomly sample a set of n points
+    possible_inliers = random.sample(data, n)
+    
+    # Step 2: Estimate the least-squares fit line from these randomly sampled points
+    x_data, y_data = zip(*possible_inliers)
+    slope, intercept, _, _, _ = stats.linregress(x_data, y_data)
+
+    # Step 3: Find the definite inliers for this line, by getting the set of points
+    # (not in the random sample) within a certain threshold, t, of the line
+    definite_inliers = []
+    for point in data:
+      if point not in possible_inliers:
+        x0 = point[0]
+        y0 = point[1]
+        dist_from_line = abs(-slope*x0 + y0 + intercept) / sqrt(slope**2 + 1) 
+        if dist_from_line < t:
+          definite_inliers.append(point)
+     
+    # Step 4: If the number of inliers is sufficiently large (>= d), then this 
+    # line may be a good fit
+    if len(inliers) >= d:
+      # Refit the line using all points in possible_inliers and definite_inliers
+      x_data, y_data = zip(*(possible_inliers + definite_inliers))
+      better_slope, better_intercept, _, _, error = stats.linregress(x_data, y_data) 
+
+      # Keep track of the best fit line found so far
+      if error < best_error:
+        best_slope = better_slope
+        best_intercept = better_intercept
+        best_error = error 
+
+  return best_slope, best_intercept
+{% endhighlight %}
+
+We calculate `dist_from_line` using [this formula](https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line):
+
+$$
+\text{distance}(ax + by + c = 0, (x_0, y_0)) = \frac{\mid a x_0 + b y_0 + c \mid}{\sqrt{a^2 + b^2}}
+$$
+
+$$
+\text{distance}(-mx + y -b = 0, (x_0, y_0)) = \frac{\mid -m x_0 + y_0 + b \mid}{\sqrt{m^2 + 1}}
+$$
+
+$$$$
+
+RANSAC Step 1
+{: style="font-size:14px"}
+  <img src="{{ site.baseurl }}/assets/images/ransac-1.png" style="width:500px"/>
+
+
+<div style="display:inline-block;">
+  <div style="float:left">
+		<p style="text-align:center;font-size:14px">RANSAC Step 1</p>
+    <img src="{{ site.baseurl }}/assets/images/ransac-1.png" style="height:200px"/>
+  </div>
+  <div style="float:left;margin-left:20px">
+		<p style="text-align:center;font-size:14px">RANSAC Step 2</p>
+    <img src="{{ site.baseurl }}/assets/images/ransac-2.png" style="height:200px"/>
+  </div>
+	<div style="float:left">
+    <p style="text-align:center;font-size:14px">RANSAC Step 3</p>
+    <img src="{{ site.baseurl }}/assets/images/ransac-3.png" style="height:200px"/>
+  </div>  
+	<div style="float:left;margin-left:20px">   
+		<p style="text-align:center;font-size:14px">RANSAC Step 4</p>
+    <img src="{{ site.baseurl }}/assets/images/ransac-4.png" style="height:200px"/>
+  </div>
+</div>
 
 ### Resources:
 * Professor Fei-Fei Li's CS 131 [lecture 1](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture1_introduction_cs131_2016.pdf), [lecture 4](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture4_pixels%20and%20filters_cs131_2016.pdf), and [lecture 5](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture5_edges_cs131_2016.pdf) slides.
