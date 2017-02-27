@@ -462,10 +462,6 @@ $$
 
 $$$$
 
-RANSAC Step 1
-{: style="font-size:14px"}
-  <img src="{{ site.baseurl }}/assets/images/ransac-1.png" style="width:500px"/>
-
 
 <div style="display:inline-block;">
   <div style="float:left">
@@ -478,11 +474,11 @@ RANSAC Step 1
   </div>
 	<div style="float:left">
     <p style="text-align:center;font-size:14px">RANSAC Step 3</p>
-    <img src="{{ site.baseurl }}/assets/images/ransac-3.png" style="height:200px"/>
+    <img src="{{ site.baseurl }}/assets/images/ransac-3.png" style="height:180px"/>
   </div>  
 	<div style="float:left;margin-left:20px">   
 		<p style="text-align:center;font-size:14px">RANSAC Step 4</p>
-    <img src="{{ site.baseurl }}/assets/images/ransac-4.png" style="height:200px"/>
+    <img src="{{ site.baseurl }}/assets/images/ransac-4.png" style="height:180px"/>
   </div>
 </div>
 
