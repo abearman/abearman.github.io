@@ -26,13 +26,13 @@ It is heavily based on slides from Professor Fei-Fei Li's class, CS131. Its purp
 	- [RANSAC](#ransac)
 * [Feature Descriptors](#feature-descriptors)
 	- [Global vs. Local Feature Descriptors](#global-vs-local-feature-descriptors)
+	- [Global Feature Descriptors](#-global-feature-descriptors)
+    * [Histogram of Oriented Gradients (HOG)](#histogram-of-oriented-gradients-hog)
 	- [Local Invariant Features](#local-invariant-features)
 		* [Harris Corner Detector](#harris-corner-detector) 
-		* [Laplacian of Gaussians (LoG)](#laplacian-of-gaussians-log)
+		* [Laplacian of Gaussian (LoG)](#laplacian-of-gaussian-log)
 		* [Difference of Gaussians (DoG)](#difference-of-gaussians-dog)
 		* [SIFT](#sift)
-	- [Global Feature Descriptors](#-global-feature-descriptors)
-  	* [Histogram of Oriented Gradients](#histogram-of-oriented-gradients)
 
 
 # Image Representation
@@ -74,6 +74,12 @@ The image is represented as a matrix of integer pixel values.
 <img src="http://openframeworks.cc/ofBook/images/image_processing_computer_vision/images/lincoln_pixel_values.png" style="width:800px"/>
 
 (I bet you realized this was a picture of Abraham Lincoln. The human brain is amazing!)
+
+### What information is "useful" in an image?
+* Edges
+* Corners
+* Color information
+* etc. (to be finished)
 
 # Image Filters
 
@@ -529,13 +535,17 @@ So, we can choose $$k$$ to be high enough to keep $$1-p$$ below a desired failur
 Features are the information extracted from images in terms of numerical values that are difficult for humans to understand and correlate, but are easy for a computer to "understand." 
 In computer vision, feature are sometimes called descriptors. We will use these two terms interchangeably.
 
-Generally, the feature extracted from an image are of a much lower dimension than the original image. This reduction in dimensionality reduces the computation of processing the batch of image.  
+Generally, the feature extracted from an image are of a much lower dimension than the original image. This reduction in dimensionality reduces the computation of processing the batch of image. 
+
+Typically, a feature descriptor converts an image of size width x height x 3 (color channels) to a feature vector of length $$n$$. 
+
+We then can feed these feature vectors into any kind of model we want (e.g., Support Vector Machines) for a variety of problem domains! (e.g., object recognition, image classification). 
 
 ## Global vs. Local Feature Descriptors
 A feature descriptor encodes an image in a way that allows it to be compared and matched to other images.
 
 A **global descriptor** describes the entire image. Global features include contour representations, shape descriptors, and texture features. 
-An example of a global feature descriptor is the [Histogram of Oriented Gradients](#histogram-of-oriented-gradients) (HOG). 
+An example of a global feature descriptor is the [Histogram of Oriented Gradients](#histogram-of-oriented-gradients-hog) (HOG). 
 Global feature descriptors are generally not very robust, as a change in part of the image may cause it to fail.
 
 A **local descriptor** describes a patch within an image. Multiple local descriptors are used to match an image. This makes them more robust to changes between the matched images (e.g., lighting, deformation, occlusion, etc.). [SIFT](#sift) and SURF are good examples of local features.
@@ -570,12 +580,82 @@ many recent applications in Computer Vision.
 
 We will go into a few of these in detail.
 
-## Local Invariant Features
+## Global Feature Descriptors 
+Recall that a global feature descriptor describes the entire image as a whole, by extracting useful information and throwing away extraneous information.
 
+## Histogram of Oriented Gradients (HOG) 
+In the HOG feature descriptor, the features computed are the distribution (histograms) of directions of gradients (oriented gradients). As we've seen before, gradients ($$x$$ and $$y$$ derivatives) of an image are useful because the magnitude of gradients is large around edges and corners, and we know that edges and corners pack in a lot more meaning about an object shape than do flat regions.
+
+There are several steps to computing HOG features, and we will go through them one by one.
+
+### Step 1: Preprocessing
+In the HOG paper, input$ images must have a fixed aspect ratio of $$1:2$$ and be resized to $$64 \times 128$$ pixels. Typically, we compute HOG features on multiple image patches at different locations and multiple scales. The only constraint is that the patch must have an aspect ratio of $$1:2$$ and be resized to $$64 \times 128$$ pixels. 
+
+![](http://www.learnopencv.com/wp-content/uploads/2016/11/hog-preprocessing.jpg)
+{: style="width:700px"}
+
+Usually, with feature detectors, a key preprocessing step is to normalize the color values. However, as Dalal and Triggs point out, this step can be omitted in HOG descriptor computation, as the ensuing descriptor normalization essentially achieves the same result. 
+
+So, once we crop and resize image patch, we're ready to calculate the HOG descriptor for this image patch.
+
+### Step 2: Calculate the gradient images
+To calculate a HOG descriptor, we need to first calculate horizontal and vertical gradients. This is achieved by filtering the image with the following kernels:
+
+![](http://www.learnopencv.com/wp-content/uploads/2016/11/gradient-kernels.jpg)
+{: style="width:400px"}
+
+So, given an image $$I$$, we obtain the $$x$$ and $$y$$ derivatives by convolving the image with each filter:
+
+$$ I_x = I * D_x $$
+
+$$ I_y = I * D_y $$
+
+where $$D_x$$ is the first kernel, and $$D_y$$ is the second kernel.
+
+Given the $$x$$- and $$y$$-gradients for each pixel in the image, $I_{ij}$, we calculate the magnitude and orientation of the gradients:
+
+$$ \theta_{I_ij} = tan^{-1} \Bigg( \frac{\partial I_{ij}}{\partial x} \big/ \frac{\partial I_{ij}}{\partial y} \Bigg) $$ 
+
+$$ \lvert \nabla{I_{ij}} \lvert = \sqrt{ \Big( \frac{\partial I_{ij}}{\partial x} \Big)^2 + \Big( \frac{\partial I_{ij}}{\partial y} \Big)^2 {}_{}}$$
+
+The figure below shows the gradients for our example image patch. The left image is the absolute value of the $$x$$-gradient. The center image is the absolute value of the $$y$$-gradient. The right image is the magnitude of the gradient.
+
+![](http://www.learnopencv.com/wp-content/uploads/2016/11/gradients.png)
+{: style="width:500px"}
+
+
+### Step 3: Calculate histogram of gradients in 8x8 cells
+In this step, the image is divided into 8x8 cells, and a histogram of gradients is calculated for each cell.
+
+The histogram is essentially a vector of 9 bins discretizing the 180 possible gradient orientations (Dalal and Triggs use "unsigned" gradients, so we only need consider 180 degrees in this case. Empirically, in the original HOG paper, which was written for pedestrian detection, unsigned gradient orientations worked better.) The bins represent ranges of gradient orientations, e.g., 0-20 degrees, 20-40 degrees, all the way to 160-180 degrees.
+
+![](http://www.learnopencv.com/wp-content/uploads/2016/12/hog-cell-gradients.png)
+{: style="width:500px"}
+
+A bin in the histogram is selected based on the gradient orientation, and the value that goes in the bin (we call this the "vote") is selected based on the gradient magnitude. The vote weight can be the gradient magnitude itself, or the squar root or square of the gradient magnitude.
+
+For the above patch, our histogram looks like this:
+
+![](http://www.learnopencv.com/wp-content/uploads/2016/12/histogram-8x8-cell.png)
+{: style="width:500px"}
+There is a lot of weight around 0 and 180 degrees, which means that most of the patch gradients are pointing up or down. 
+
+### Step 4: 16x16 block normalization
+Gradients of an image are sensitive to overall lighting. For example, if we make the image darker by dividing all pixel values by 2, the gradient magnitude will change by half, and therefore the histogram values will change by half. Ideally, we want our descriptor to be independent of lighting variations.
+
+Therefore, we want our histograms to be normalized, so that it is not affected by lighting variations. 
+
+Instead of just normalizing each 9x1 histogram, we normalize over a bigger sized block of $$16 \times 16$$. A $$16 \times 16$$ block has 4 histograms which can be concatenated to form a $$36 \times 1$$ element vector, which we then normalize. We then move the window by 8 pixels (see the gif below) and a normalized $$36 \times 1$$ vector is calculated over this window, and the process is repeated.
+
+![](http://www.learnopencv.com/wp-content/uploads/2016/12/hog-16x16-block-normalization.gif)
+
+### Step 5: Calculate the HOG feature vector
+To calculate the final feature vector for the entire image patch, the $$36 \times 1$$ histograms are concatenated into one long vector. 
+
+## Local Invariant Features
 Local invariant features are a way to describe the constituent objects/parts in an image.
 
 ### Motivations
-
 How do we identify the same point(s) in different images depicting the same thing, but which may have different orientations, lighting, occlusions, articulation etc? 
 
 ![](http://www.cc.gatech.edu/~hays/compvision/results/proj2/html/sshah426/matches.jpg)
@@ -606,7 +686,7 @@ Below are the levels of geometric invariance:
 
 ## Harris Corner Detector
 
-## Laplacian of Gaussians (LoG)
+## Laplacian of Gaussian (LoG)
 
 The Laplacian of Gaussians and the [Difference of Gaussians](#difference-of-gaussians-dog) are both **blob detection** techniques. They detect regions in an image that differ in properties, such as brightness or color, compared to surrounding regions. Informally, a **blob** is a region of an image in which some properties are constant or approximately constant. Below is an image with several "blobs" circled. 
 
@@ -624,6 +704,8 @@ $$ G_t(x, y) = \frac{1}{2 \pi t} e^{-\frac{x^2 + y^2}{2t} } $$
 
 at a certain scale $$t$$ to give a scale space representation $$ L_t(x,y) = G_t(x,y) * f(x,y). $$
 (See [this section](#effects-of-noise) for a review of the Gaussian kernel).
+
+We add Gaussian blur because the Laplacian (second-order derivative of the image) is extremely sensitive to noise. The blur helps smooth the image and stabilize the second-order derivative.
 
 ### Step 2: Laplacian filter
 
@@ -747,23 +829,158 @@ Below is an example of some image keypoints.
 ![](https://i.stack.imgur.com/L4RUT.png)
 {:style="width:600px"}
 
-SIFT has four steps, which we will explore one by one.
+SIFT has several steps, which we will explore one by one.
 
-### Step 1: Scale-space extrema detection
+### Step 1: Create the scale-space for an input image 
 
-It is obvious that we can't use the same window to detect keypoints with a different scale. For this, we use **scale-space filtering**.  
+It is obvious that we can't use the same window to detect keypoints with a different scale. For this, we use **scale-space filtering**. The general idea is to create a grid of images at progressively smaller scales and larger amounts of blur. 
+We add blur in order to intentionally get rid of some detail from the image, without introducing new false details. 
 
-### Step 2: Keypoint Localization
+#### Octaves and Scales
+We change the image scale and add blur for several "octaves" of the image. 
+* The images in a single octave are the same size (scale), but have different amounts of blur.
+* We linearly increase the amount of blur. So, if we start with a blur value of $$\sigma$$, then the amount of blur in the next image will be $$k \sigma$$, where $$k$$ is a constant that you choose. 
+* We get from one octave to the next by halving the size of the image. 
 
-### Step 3: Orientation Assignment
+The original SIFT algorithm suggests using 4 octaves and 5 blur levels. It also sets $$\sigma=1.6$$ and $$k=\sqrt{2}$$. Here's what that looks like on one image:
 
-### Keypoint Descriptor
+![](http://aishack.in/static/img/tut/sift-octaves.jpg)
+{: style="width:500px"}
 
-### 
+### Step 2: LoG Approximations
+In the previous step, we created the scale-space of an image, creating a grid of progressively blurred images at progressively smaller sizes. In this step, we use those blurred images to generate another set of images, the [Difference of Gaussians](#difference-of-gaussians-dog). DoG acts as a blob detector which detects blobs in various sizes, so the DoG images will help us find interesting image keypoints. 
 
-## Global Feature Descriptors 
+#### Why use DoG, not LoG?
+In the [Laplacian of Gaussian](#laplacian-of-gaussian-log) (LoG) operation, we calculate second order derivatives (the "Laplacian") on a Gaussian-blurred image. This locates edges and corners on the image, which are good for finding keypoints. 
 
-## Histogram of Oriented Gradients 
+However, calculating all of those second-order derivatives is computationally expensive, so the SIFT algorithms uses the [Difference of Gaussians](#difference-of-gaussians-dog), which is an approximation of LoG. 
+
+To generate the Difference of Gaussians quickly, we use the scale space that we generated in Step 1. We calculate the difference between images with different amounts of blur: 
+
+![](http://aishack.in/static/img/tut/sift-dog-idea.jpg)
+{: style="width:500px"}
+
+### Step 3: Keypoint Localization
+Finding image keypoints is a two-step process:
+
+#### Step 3a: Locate maxima/minima in DoG images
+The first step is to coarsely locate the maxima/minima (extrema) pixels in the DoG images. We do this by simply iterating over each pixel and checking all of its neighbors. The check is done within the current image and also the images above and below it in the scale-space. There are **26 neighbor checks** (8 in the current DoG image, 9 in the DoG image above, 9 in the DoG image below). X is marked as a keypoint if it is the greatest or least of all 26 neighbors.
+This basically means that the keypoint is best represented at that scale. 
+
+![](http://docs.opencv.org/3.1.0/sift_local_extrema.jpg)
+{: style="width:500px"}
+
+Note that keypoints are not detected in the lowermost and topmost scales. There simply aren't enough neighbors to do the comparison. So we ignore the DoG images at the lowermost and topmost scales.
+
+#### Step 3b: Find subpixel maxima/minima 
+Once the potential keypoint locations are found, they have to be refined to get more accurate results.
+Initially, to localize keypoints, the authors of the SIFT paper just used the location and scale of the candidate keypoint.
+The new approach calculates the interpolated location of the extremum, which substantially improves matching and stability.
+The interpolation is done using the quadratic Taylor expansion of the relevant DoG image, $$D(x,y,\sigma)$$ with the candidate keypoint as the origin. This Taylor expansion is given by:
+
+$$
+D(\mathbf{x}) = D + \frac{\partial D^T}{\partial \mathbf{x}} \mathbf{x} 
++ \frac{1}{2} \mathbf{x}^T \frac{\partial^2 D}{\partial \mathbf{x}^2} \mathbf{x}
+$$
+
+where $$D$$ and its derivatives are evaluated at the candidate keypoint and $$\mathbf{x} = (x, y, \sigma)^T$$ is the offset from this point.
+
+We can easily find the extreme points of this equation (differentiate and set $$=0$$). Each extreme point, $$\hat{\mathbf{x}}$$, is a subpixel keypoint location. 
+
+The author of SIFT recommends generating two such extrema images. So, you need exactly 4 DoG images. To generate 4 DoG images, you need 5 Gaussian blurred images. This is why we need 5 level of blurs in each octave. 
+
+### Step 4: Discarding low-contrast keypoints
+The keypoints generated in the previous step produce a lot of keypoints. Some of them lie along an edge, or they don't have enough contrast, which makes them not useful as features. So, we discard them. 
+
+#### Step 4a: Removing low contrast features
+If the magnitude of the intensity at the current pixel in the DoG image (that is being checked for minima/maxima) is less than a certain value, it is rejected. 
+
+Because we have subpixel keypoints (we used the Taylor expansion to refine keypoints), we again need to use the Taylor expansion to get the intensity value at subpixel locations. If its magnitude is less than a certain value ($$0.03$$ in the SIFT paper), we reject the keypoint.
+
+#### Step 4b: Removing edges
+The idea is to calculate two gradients at the keypoint, both which are mutually perpendicular. Based on the image around the keypoint, three possibilities exist. The image around the keypoint can be:
+* **A flat region**: if this is the case, both gradients will be small.
+* **An edge**: Here, one gradient will be large (the one that is perpendicular to the edge), and the other one will be small (parallel to the edge).
+* **A corner**: Here, both gradients will be large.
+
+Corners are great keypoints. So, we just want corners. If both gradients are large enough, we will accept it as a keypoint. Otherwise, it is rejected.
+
+Mathematically, this is achieved by the Hessian Matrix (see the section on the [Harris Corner Detector](#harris-corner-detector). 
+
+The figure below shows the detected keypoints on an image for Steps 3-4: 
+
+<div style="display:inline-block;">
+  <div style="float:left">
+    <img src="{{site.baseurl}}/assets/images/sift-keypoints-1.jpg" style="height:250px"/>
+    <p style="width:260px;text-align:center;font-size:14px">Original scale space extrema</p>
+  </div>
+  <div style="float:left;margin-left:20px">
+    <img src="{{site.baseurl}}/assets/images/sift-keypoints-2.jpg" style="height:250px"/>
+    <p style="width:260px;text-align:center;font-size:14px">Low contrast keypoints are discarded</p>
+  </div>
+  <div style="float:left;margin-left:20px">
+    <img src="{{site.baseurl}}/assets/images/sift-keypoints-3.jpg" style="height:250px"/>
+    <p style="width:260px;text-align:center;font-size:14px">Keypoints on edges are discarded</p>
+  </div>
+</div>
+
+### Step 5: Orientation Assignment
+After Step 4, we have legitimate keypoints that have been tested to be stable. We already know the scale at which the keypoint was detected (it's the same as the scale of the blurred image). So, we already have **scale invariance**. The next thing is to assign an orientation to each keypoint. This orientation provides **rotation invariance**.
+
+The general idea is to collect gradient directions and magnitudes around each keypoint (in a fixed window size). Then we determine the most prominent orientation(s) in that region, and we assign this orientation(s) to the keypoint. Any later calculations are done relative to this orientation. This ensures rotation invariance.
+
+![](http://aishack.in/static/img/tut/sift-a-keypoint.jpg)
+{: style="width:500px"}
+
+Gradient magnitudes and orientations are calculated using pixel differences as follows:
+
+$$
+\lvert \nabla f \lvert = 
+\sqrt{ \big[ L(x+1,y)-L(x-1,y) \big]^2 + \big[ L(x,y+1)-L(x,y-1) \big]^2 }
+$$
+
+$$
+\theta(x,y) = \tan^{-1} \Big( \frac{L(x,y+1) - L(x,y-1)}{L(x+1,y) - L(x-1,y)}\Big)
+$$
+
+The magnitude and orientation is calculated for all pixels around the keypoint, where each neighbor pixel is indexed as $$(x,y)$$ and $$L(x,y)$$ returns the intensity of the pixel at that location. The window size, or "orientation collection region," is equal to $$1.5 \cdot \sigma_k$$, where $$\sigma_k$$ is the scale of the keypoint. 
+
+We create a histogram, where the 360 degrees of orientation are broken into 36 bins (e.g., 0-9 degrees, 10-19 degrees, etc.). We put the gradient orientation for each pixel around the keypoint in this histogram, in an "amount" that is proportional to the magnitude of the gradient at that point weighted by Gaussian blur with $$\sigma = 1.5\sigma_k$$, where $$\sigma_k$$ is the scale of the keypoint. 
+
+The histogram will have a peak at some orientation, and we assign the keypoint that orientation bin. 
+
+Also, any peaks above 80% of the highest peak are converted into a new keypoint. This new keypoint has the same location and scale as the original, but its orientation is equal to the other peak. So, orientation can split up one keypoint into multiple keypoints:
+
+![](http://aishack.in/static/img/tut/sift-orientation-histogram.jpg)
+{: style="width:500px"}
+
+### Step 6: Keypoint Descriptor
+The final step of generating SIFT features is to create a uniquely identifying "fingerprint" for each keypoint. This fingerprint should be easy to calculate. It should also be relatively lenient when compared against other keypoints (because conditions are never *exactly* the same when comparing two different images). 
+
+We start by creating a 16x16 neighborhood around the keypoint. It is divided into 16 sub-blocks of size 4x4. For each sub-block, we calculate gradient magnitudes and orientations and create an 8-bin orientation histogram. (So, there are a total of $$16 \times 8 = 128$$ bins available). The first bin has range 0-44 degrees, the second bin has range 45-89 degrees, and so on. 
+
+![](http://aishack.in/static/img/tut/sift-fingerprint.jpg)
+{: style="width=500px"}
+
+As always, the amount added to the bin depends on the magnitude of the gradient.
+However, in this step, the amount added to the histogram also depends on the distance of the keypoint.
+This is done using a Gaussian weighting function. The further away the neighbor pixel is, the smaller the amount that gets added to the histogram.  
+
+![](http://aishack.in/static/img/tut/sift-gaussian-4x4-weighting1.jpg)
+{: style="width=500px"}
+
+Once we have all 128 numbers (the 8 bins in 16 different histograms from the 16 different 4x4 sub-blocks), we normalize them, and these values form the **feature vector** that uniquely identifies the keypoint.
+
+#### Solving a few last problems
+* **Rotation dependence**. The feature vector uses gradient orientations (in the histograms). If we rotate the image, this feature vector no longer works. To achieve rotation invariance, the keypoint's rotation is subtracted from each orientation. Thus each gradient orientation is relative to the keypoint's orientation. 
+* **Illumination dependence**. If we threshold values that are large, we can achieve illumination dependence. So, we threshold all of the 128 values to be $$<= 0.2$$. We then re-normalize the feature vector. Now our feature vector is illumination independent! 
+
+### Step 7: Keypoint Matching
+Now, how do we actually use these feature vectors for keypoints? In general, we use them to **match keypoints across multiple images.**
+
+Keypoints between two images are matched by identifying their nearest feature vector neighbours (using the Euclidean distance metric or something similar). However, in some cases, the second closest-match may be very near to the first. It may happen due to noise or some other reasons. In that case, the ratio of closest-distance to second-closest distance is taken. If this ratio is greater than 0.8, then the keypoint match is rejected. This eliminates around 90% of false matches while discards only 5% correct matches, as per the paper.
+
+
 
 ## Resources:
 * Professor Fei-Fei Li's CS 131 [lecture 1](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture1_introduction_cs131_2016.pdf), [lecture 4](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture4_pixels%20and%20filters_cs131_2016.pdf), and [lecture 5](http://vision.stanford.edu/teaching/cs131_fall1617/lectures/lecture5_edges_cs131_2016.pdf) slides.
@@ -772,3 +989,5 @@ It is obvious that we can't use the same window to detect keypoints with a diffe
 * [Canny Edge Detection](http://www-scf.usc.edu/~boqinggo/Canny.htm)
 * Tinne Tuytelaar's [ECCV tutorial on Local Invariant Features](http://homes.esat.kuleuven.be/~tuytelaa/tutorial-ECCV06.pdf)
 * [Open CV Introduction to SIFT](http://docs.opencv.org/3.1.0/da/df5/tutorial_py_sift_intro.html)
+* [Utkarsh Sinha's SIFT tutorial](http://aishack.in/tutorials/sift-scale-invariant-feature-transform-introduction/)
+* [Satya Mallick's Histogram of Oriented Gradients tutorial](http://www.learnopencv.com/histogram-of-oriented-gradients/)
