@@ -112,7 +112,116 @@ Now we get to the key: factorizing the matrix via SVD provides an alternative an
 3. Do steps 1 and 2 in such a way that the map $$A$$ is diagonal with respect to both bases simultaneously.  
 
 ## Principle Components Analysis
+### Tldr
 In one sentence, PCA can supply the user with a lower-dimensional picture of the data, a "shadow" of the object when viewed from its most informative viewpoint.
 
+### Overview
+The principal components are the directions of the data which have the most variance. They are in decreasing order, e.g., the first principal component has the most variance, the second principal component has the second most variance, and so on. See the graph below for an example.  
+
+![PCA oval](http://weigend.com/files/teaching/stanford/2008/stanford2008.wikispaces.com/file/view/pca_example.gif)
+
+Note that the principal component directions are orthogonal to each other. 
+
+Going back to eigenvectors and eigenvalues, we recall that an eigenvector specifies a direction of a line (e.g., vertical, horizontal, 45 degrees). Another interpretation of an eigenvalue is a number telling you **how much variance there is in the data in the direction of the eigenvector.** The eigenvector with the highest eigenvalue is therefore the first principal component.
+
+The number of eigenvectors/values in a dataset depends on the number of dimensions that the dataset has. Suppose we're measuring housing location and housing price -- there are 2 variables, so we have 2 eigenpairs. If we're measuring housing location, housing price, and square footage, then there are 3 eigenpairs.
+
+However, the eigenvector directions are **not** the same as the original dimensions of the dataset. Consider the visualization below:
+
+![PCA figure 1](https://georgemdallas.files.wordpress.com/2013/10/pca2.jpg)
+{: style="width:400px"}
+
+Let's say our original dataset has 2 dimensions: the $$x$$-axis is housing location and the $$y$$-axis is housing price. The graph below shows the two principal component directions: 
+
+![PCA figure 2](https://georgemdallas.files.wordpress.com/2013/10/pca11.jpg)
+{: style="width:400px"}
+
+We can now reframe the data using these new dimensions:
+
+![PCA figure 3](https://georgemdallas.files.wordpress.com/2013/10/pca1.jpg)
+{: style="width:400px"}
+
+We haven't changed the data; we're just projecting it into a new basis $$\{ x_\text{new}, y_\text{new} \}$$ instead of $$\{x, y\}$$. 
+
+### Aside: Change of basis 
+We've talked about needing to "project data into a new basis," but what does this mean and how do we do it? 
+
+Recall that a **basis** for a vector space of dimension $$n$$ is a set of $$n$$ vectors $$(\alpha_1, \dots, \alpha_n)$$, called basis vectors, with the property that every vector in the space can be expressed as a unique linear combination of the basis vectors. 
+
+The **standard basis** in $$\mathbb{R}^3$$ is the Cartesian coordinates, $$x$$, $$y$$, and $$z$$. In vector notation, we write:
+
+$$ 
+\left(
+\begin{array}{c}
+x \\
+y \\
+z  
+\end{array} 
+\right) = 
+x \left(
+\begin{array}{c}
+1 \\
+0 \\
+0 
+\end{array}
+\right) + 
+y \left(
+\begin{array}{c}
+0 \\
+1 \\
+0
+\end{array}
+\right) +
+z \left(
+\begin{array}{c}
+0 \\
+0 \\
+1
+\end{array}
+\right) =
+x \mathbf{e_1} + y \mathbf{e_2} + z \mathbf{e_3}
+$$
+
+where $$\{ \mathbf{e_1}, \mathbf{e_2}, \mathbf{e_3} \}$$ are the standard basis vectors.
+
+Sometimes, we need to transform data from one basis to another, like above in PCA. This is called a **change of basis.**
+
+### Application: dimension reduction
+What is PCA used for? Primarily, it's for **dimension reduction.** This means reducing the data into its basic components, stripping away any noise.
+
+We find the eigenvectors/values of the dataset (sorted in descending order), and choose all the pairs that have non-zero eigenvalues, or just choose the $$n$$ pairs with the largest eigenvalues. Then, we project the data into the basis defined by these eigenvectors. 
+
+### Mathematical interpretation: the relationship of SVD to PCA
+Read this section if you want a more rigorous explanation of how to do PCA, and how SVD is a general case of PCA.
+
+Let's say our data matrix is called $$X$$, where columns represent the dimensionality (or number of features) in the dataset, and each row is a different data example. Let's say that $$X$$ is zero-centered, i.e. the column means have been subtracted from every column. In PCA, we must compute the eigenvectors/values of the covariance matrix, $$C = X^T X$$. The covariance matrix is symmetric, so it is diagonalizable:
+
+$$
+C = X^T X = V L V^T
+$$  
+
+where $$V$$ is a matrix of eigenvectors (each column is an eigenvector) and $$L$$ is a diagonal matrix with eigenvalues $$\lambda_i$$ in decreasing order on the diagonal. 
+
+As before, the eigenvectors are the principal directions of the data (directions of largest variance, in descending order of more variance to less variance). The coordinates of the $$i$$-th data point in the new PCA space are given by the $$i$$-th row of $$X V$$.  
+
+If we perform the singular value decomposition of $$X$$, we get:
+
+$$
+X = U \Sigma V^T
+$$
+
+We can rewrite the covariance matrix $$C$$ using the singular value decomposition of $$X$$:
+
+$$ 
+C = X^T X =  (U \Sigma V^T)^T U \Sigma V^T = V \Sigma^T U^T U \Sigma V^T = V \Sigma^2 V^T 
+$$
+
+because $$U$$ is orthogonal, so $$U^T = U^{-1}$$ and therefore $$U^T U = U^{-1} U = I$$. 
+
+Therefore, we can easily see that the matrix $$L$$ of eigenvalues from PCA is equal to $$\Sigma^2$$.
+
+Principal components are given by $$X V = U \Sigma V^T V = U \Sigma$$.
+
 ### References
-* [Jeremy Kun's SVD article](https://jeremykun.com/2016/04/18/singular-value-decomposition-part-1-perspectives-on-linear-algebra/) 
+* [Jeremy Kun's SVD article](https://jeremykun.com/2016/04/18/singular-value-decomposition-part-1-perspectives-on-linear-algebra/)
+* [George Dallas's article on PCA](https://georgemdallas.wordpress.com/2013/10/30/principal-component-analysis-4-dummies-eigenvectors-eigenvalues-and-dimension-reduction/) 
