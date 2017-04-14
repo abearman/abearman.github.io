@@ -16,7 +16,7 @@ categories: main
 ## Table of Contents
 * [Eigenvectors and Eigenvalues](#eigenvectors-and-eigenvalues)
 * [Singular Value Decomposition](#singular-value-decomposition)
-* Principle Components Analysis
+* [Principle Components Analysis](#principal-components-analysis)
 
 ## Eigenvectors and Eigenvalues
 ### Definition
